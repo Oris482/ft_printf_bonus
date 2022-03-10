@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hojinjang <hojinjang@student.42.fr>        +#+  +:+       +#+        */
+/*   By: jaesjeon <jaesjeon@student.42seoul.>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/02 23:32:07 by minsuki2          #+#    #+#             */
-/*   Updated: 2022/03/07 04:47:21 by minsuki2         ###   ########.fr       */
+/*   Created: 2022/03/10 21:43:43 by jaesjeon          #+#    #+#             */
+/*   Updated: 2022/03/10 21:43:48 by jaesjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,11 @@ int	measure_len_diuxp(t_gather *fwp, int *len)
 
 int	check_max(int *cnt, int full_len)
 {
-	int	idx;
+	int	free_space;
 
-	idx = 0;
-	while (idx++ < full_len)
-	{
-		if (++(*cnt) == 2147483647)
-			return (ERROR);
-	}
+	free_space = INT_MAX - *cnt;
+	if (free_space <= full_len)
+		return (ERROR);
+	*cnt += full_len;
 	return (SUCCESS);
 }

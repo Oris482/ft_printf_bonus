@@ -52,7 +52,6 @@ typedef struct s_pctlst
 	char			*before_pct;
 	char			*after_pct;
 	int				full_len;
-	struct s_pctlst	*next;
 }	t_pctlst;
 
 int			ft_printf(const char *s, ...);
@@ -66,7 +65,6 @@ char		*make_p(t_gather *fwp, size_t address, int *cnt, int len);
 char		*make_x(t_gather *fwp, size_t arg, int *cnt, int len);
 int			salloc_int(char **new, int len, char fill);
 int			isfg_inc(t_gather *fwp);
-t_pctlst	*ft_lstadd_back_last(t_pctlst **lst, t_pctlst *new);
 t_pctlst	*ft_lstnew_before_str(char *before);
 int			measure_len_diuxp(t_gather *fwp, int *len);
 void		print_lst(t_pctlst *lst);

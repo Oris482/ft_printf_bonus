@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf_utils2_bonus.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jaesjeon <jaesjeon@student.42seoul.>       +#+  +:+       +#+        */
+/*   By: minsuki2 <minsuki2@student.42seoul.kr      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/09 19:23:15 by jaesjeon          #+#    #+#             */
-/*   Updated: 2022/03/09 19:23:19 by jaesjeon         ###   ########.fr       */
+/*   Created: 2022/03/07 01:39:46 by minsuki2          #+#    #+#             */
+/*   Updated: 2022/03/10 22:16:01 by jaesjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,58 +15,29 @@
 int	ft_nstrchr_cnt(const char *s, int c, int *cnt)
 {
 	int	idx;
+	int	free_space;
 
 	idx = 0;
+	if (cnt)
+		free_space = INT_MAX - *cnt;
 	while (s[idx])
 	{
-		if (cnt && *cnt == INT_MAX)
-			return (ERROR);
 		if (s[idx] == (char)c)
+		{
+			if (cnt)
+				*cnt += idx;
 			return (idx);
+		}
 		idx++;
-		if (cnt)
-			(*cnt)++;
+		if (idx < 0)
+			return (ERROR);
 	}
 	if (!cnt)
 		return (ERROR);
+	if (free_space <= idx)
+		return (ERROR);
+	*cnt += idx;
 	return (idx);
-}
-
-static void	*ft_lstfclean(t_pctlst **lst)
-{
-	t_pctlst	*tmp;
-
-	if (!lst)
-		return (NULL);
-	while (*lst)
-	{
-		if ((*lst)->before_pct)
-			free((*lst)->before_pct);
-		if ((*lst)->after_pct)
-			free((*lst)->after_pct);
-		tmp = *lst;
-		*lst = (*lst)->next;
-		free(tmp);
-	}
-	return (NULL);
-}
-
-t_pctlst	*ft_lstadd_back_last(t_pctlst **lst, t_pctlst *new)
-{
-	t_pctlst	*tmp;
-
-	if (!lst || !new)
-		return (NULL);
-	if (!*lst)
-		*lst = new;
-	else
-	{
-		tmp = *lst;
-		while (tmp->next)
-			 tmp = tmp->next;
-		tmp->next = new;
-	}
-	return (new);
 }
 
 t_pctlst	*ft_lstnew_before_str(char *before)
@@ -79,27 +50,26 @@ t_pctlst	*ft_lstnew_before_str(char *before)
 	new->before_pct = before;
 	new->after_pct = NULL;
 	new->full_len = 0;
-	new->next = NULL;
 	return (new);
 }
 
 void	print_lst(t_pctlst *lst)
 {
-	t_pctlst	*first;
-
-	first = lst;
-	while (lst)
+	if (lst)
 	{
 		if (lst->before_pct)
+		{
 			ft_putstr_fd(lst->before_pct, 1);
+			free(lst->before_pct);
+		}
 		if (lst->after_pct)
 		{
 			if (lst->full_len != 0)
 				write(1, lst->after_pct, lst->full_len);
 			else
 				ft_putstr_fd(lst->after_pct, 1);
+			free(lst->after_pct);
 		}
-		lst = lst->next;
 	}
-	ft_lstfclean(&first);
+	free(lst);
 }
